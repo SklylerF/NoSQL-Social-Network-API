@@ -22,6 +22,12 @@ const reactionSchema = new Schema(
             get: (date) => timeSince(date)
         }
 
+    },
+    {
+        toJSON: {
+            getter: true,
+        },
+        id: false,
     }
 );
 
