@@ -6,7 +6,8 @@ const thoughtSchema = new Schema(
         thoughtText: {
             type: String,
             required: true,
-            maxLength: 280
+            maxLength: 280,
+            minLength: 1
         },
         createdAt: {
             type: Date,
@@ -38,4 +39,4 @@ thoughtSchema
 //  initialize thought model
 const Thoughts = model('Thoughts', thoughtSchema);
 
-model.export = Thoughts;
+module.export = Thoughts;
