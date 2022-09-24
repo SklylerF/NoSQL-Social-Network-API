@@ -12,7 +12,7 @@ module.exports = {
             res.status(500).json(err)
         }
     },
-    async getOneThought(req, res) {
+    async getSingleThought(req, res) {
         try {
             Thought.findOne({ _id: req.params.thoughtId })
                 .select('-__v')
@@ -85,6 +85,39 @@ module.exports = {
                         return;
                     }
                 })
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
+    // creates reaction 
+    async createReaction(req, res) {
+        try {
+            Thought.findOneAndUpdate(
+                { _id: req.params.thoughtId },
+                { $set: req.body },
+                { new: true }
+            )
+                .then((thought) =>
+                    !thought
+                        ? res.status(404).json({ message: 'no thought with this id' })
+                        : res.status(200).json(thought)
+                )
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
+    async deleteReaction(req, res) {
+        try {
+            Thought.findOneAndUpdate(
+                { _id: req.params.thoughtId },
+                { $pull: { reactions: { _id: req.body.reactionId } } },
+                { new: true }
+            )
+                .then((thought) =>
+                    !thought
+                        ? res.status(404).json({ message: 'no thought with this id' })
+                        : res.status(200).json(thought)
+                )
         } catch (err) {
             res.status(500).json(err)
         }

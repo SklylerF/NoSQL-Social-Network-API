@@ -1,5 +1,8 @@
 const { Schema, model } = require('mongoose');
-const emailValidation = require('../utils/emailValidation');
+const validateEmail = function (email) {
+    let regex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+    return regex.test(email)
+};
 
 // schema to create user model 
 const userSchema = new Schema(
@@ -14,18 +17,18 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            validate: [emailValidation, "Enter a valid email."]
+            validate: [validateEmail, "Enter a valid email."]
         },
         // thoughts _id value refereses the thought model
         thoughts: [
             {
-                type: Schema.types.objectId,
+                type: Schema.Types.ObjectId,
                 ref: 'Thought'
             }],
         // friends _id value refereses the User model
         friends: [
             {
-                type: Schema.types.objectId,
+                type: Schema.Types.ObjectId,
                 ref: 'User'
             }]
     },
@@ -39,10 +42,10 @@ const userSchema = new Schema(
 
 // retrives the length of the user's friends array.
 userSchema
-    .virtuals('friendCount')
+    .virtual('friendCount')
     .get(() => this.friends.length);
 
 // initialize user model
 const User = model('User', userSchema);
 
-module.export = User;
+module.exports = User;
