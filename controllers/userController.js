@@ -34,7 +34,7 @@ module.exports = {
                 return res.status(500).json(err)
             });
     },
-    updateUser(rea, res) {
+    updateUser(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
             { $set: req.body },
@@ -50,5 +50,35 @@ module.exports = {
         )
             .catch((err) => res.status(500).json(err))
 
-    }
+    },
+    async addFriend(req, res) {
+        try {
+            User.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $push: { friends: req.params.friendId } },
+                { runValidators: true, new: true }
+            )
+                .then((user) => {
+                    res.status(200).json(User.friends)
+                })
+        } catch (err) {
+            res.status(500).json(err)
+        }
+
+    },
+    async removeFriend(req, res) {
+        try {
+            User.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $pull: { friends: req.params.friendId } },
+                { runValidators: true, new: true }
+            )
+                .then((user) => {
+                    res.status(200).json(User.friends)
+                })
+        } catch (err) {
+            res.status(500).json(err)
+        }
+
+    },
 }
